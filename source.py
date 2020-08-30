@@ -3,7 +3,7 @@ from telebot import types  # кнопки
 from string import Template
 
 # token
-bot = telebot.TeleBot('1113402960:AAFGU7hMaeGDdSUk69nOn8g7VdosgghXvMk')
+bot = telebot.TeleBot('')
 
 # emoji
 scissors = u'\U00002702'
