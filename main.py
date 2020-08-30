@@ -10,7 +10,7 @@ import calendar
 bot = telebot.TeleBot('1113402960:AAFGU7hMaeGDdSUk69nOn8g7VdosgghXvMk')
 
 user_dict = {}
-# # ініціалзізація конект з БД
+# # ініціалзізація онект з БД
 # db = SQLConnect('db.db')
 
 class User:
