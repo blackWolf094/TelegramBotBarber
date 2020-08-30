@@ -7,7 +7,7 @@ import datetime
 import calendar
 
 """token"""
-bot = telebot.TeleBot('1113402960:AAFGU7hMaeGDdSUk69nOn8g7VdosgghXvMk')
+bot = telebot.TeleBot('')
 
 user_dict = {}
 # # ініціалзізація конект з БД
