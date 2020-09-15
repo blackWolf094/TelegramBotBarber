@@ -1,16 +1,20 @@
 import telebot
 from telebot import types  # кнопки
 from string import Template
-import source
+import source, config
+# import sqlConnect
+# import sqlite3
+# from sqlite3 import Error
+# from time import sleep, ctime
 # from sqlConnect import SQLConnect
-import datetime
-import calendar
+# import datetime
+# import calendar
 
 """token"""
-bot = telebot.TeleBot('1113402960:AAFGU7hMaeGDdSUk69nOn8g7VdosgghXvMk')
+bot = telebot.TeleBot(config.token)
 
 user_dict = {}
-# # ініціалзізація онект з БД
+# # ініціалзізація конект з БД
 # db = SQLConnect('db.db')
 
 class User:
@@ -32,7 +36,11 @@ def send_welcome(message):
     markup.add(itembtn1, itembtn2)
     bot.send_message(message.chat.id, "Доброго дня "
                      + message.from_user.first_name
-                     + ", я ваш Барбер бот. Виберіть пункт меню:", reply_markup=markup)
+                     + ", я ваш Барбер бот.\n "
+                     + "Виберіть пункт меню:\n\n"
+                     + "/about  - детальна інформація про заклад\n"
+                     + "/registration  - записатись на прийом\n",
+                     reply_markup=markup)
 
 # /about
 @bot.message_handler(commands=['about'])
@@ -143,9 +151,9 @@ def create_order(message):
 
         # ваша заявка
         bot.send_message(chat_id, getRegData(user, 'Ваша заявка', message.from_user.first_name), parse_mode="Markdown")
-        # отправить в группу
-        # bot.send_message(config.chat_id, getRegData(user, 'Заявка від бота', bot.get_me().username),
-        #                  parse_mode="Markdown")
+        # відправити в группу
+        bot.send_message(config.group_id, getRegData(user, 'Заявка від бота', bot.get_me().first_name), parse_mode="Markdown")
+        # bot.send_message(-1001432228089, "TEST")
 
         markup = telebot.types.InlineKeyboardMarkup()
         markup.add(telebot.types.InlineKeyboardButton(text='Так', callback_data=1))
@@ -157,6 +165,8 @@ def create_order(message):
         # async def add_order(message: types.Message):
         #     db.add_order(message.from_user.id, user.spesialist, user.service, user.fullname, user.phone)
 
+        # bot.send_message(message.from_user.id, f'Welcome  {message.from_user.first_name}')
+
     except Exception as e:
         # msg = bot.reply_to(message, error + 'Будь ласка, напишіть Ваш номер телефона:')
         bot.reply_to(message, source.error + 'error')
@@ -165,7 +175,7 @@ def create_order(message):
 # нельзя делать перенос строки Template и в send_message должно стоять parse_mode="Markdown"
 def getRegData(user, title, name):
     t = Template(
-        '$title *$UserName* \n Спеціаліст: *$spesialist* \n Вибрана послуга: *$service* \n Імя клієта: *$name* \n Ваш телефон: *$phone*')
+        '$title *$UserName* \n Спеціаліст: *$spesialist* \n Вибрана послуга: *$service* \n Імя клієта: *$name* \n Телефон клієта: *$phone*')
 
     return t.substitute({
         'title': title,
@@ -176,14 +186,23 @@ def getRegData(user, title, name):
         'phone': user.phone
     })
 
+    # sqlConnect.register_user(user.spesialist, user.service, user.fullname, user.phone)
+
 # headler_block
 @bot.callback_query_handler(func=lambda call: True)
 def query_handler(call):
+    # chat_id = message.chat.id
+    # user = user_dict[chat_id]
     if call.data == '1':
         bot.answer_callback_query(callback_query_id=call.id, text='Дані успішно відправлені!')
         answer = source.check + 'Ваша заявка успішно створена!\n ' \
                  'Очікуємо на вас в баребершопі Boroda'
-        # bot.register_next_step_handler(set_specialist)
+
+        # bot.send_message(-1001432228089, getRegData(user, 'Заявка від бота', bot.get_me().username),
+        #                  parse_mode="Markdown")
+        # chat_id = message.chat.id
+        # user = user_dict[chat_id]
+        # sqlConnect.register_user(user.spesialist, user.service, user.fullname, user.phone)
     elif call.data == '2':
         answer = 'В процесі...'
         # bot.register_next_step_handler(msg, lambda m: callback(m, args *))
@@ -195,6 +214,7 @@ def query_handler(call):
 @bot.message_handler(content_types=["text"])
 def send_help(message):
     bot.send_message(message.chat.id, 'О нас - /about\nРегистрация - /registration\nПомощь - /help')
+    bot.send_message(-1001432228089, "Hello!")
 
 
 # Enable saving next step handlers to file "./.handlers-saves/step.save".

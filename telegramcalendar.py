@@ -7,7 +7,6 @@
 Base methods for calendar keyboard creation and processing.
 """
 
-
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup,ReplyKeyboardRemove
 import datetime
 import calendar
