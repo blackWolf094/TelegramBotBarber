@@ -2,6 +2,7 @@ import telebot
 from telebot import types  # кнопки
 from string import Template
 import source, config
+from bottle import run, post
 # import sqlConnect
 # import sqlite3
 # from sqlite3 import Error
@@ -10,7 +11,15 @@ import source, config
 # import datetime
 # import calendar
 
-"""token"""
+# """bottle"""
+# @post('/')  # our python function based endpoint
+# def main():
+#     return
+#
+# if __name__ == '__main__':
+#     run(host='localhost', port=8080, debug=True)
+
+"""Telegram token"""
 bot = telebot.TeleBot(config.token)
 
 user_dict = {}
